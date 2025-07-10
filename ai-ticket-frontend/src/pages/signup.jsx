@@ -45,7 +45,7 @@ export default function SignupPage() {
     <>
       <Header />
       <JiraBoardIntro />
-      <div className="min-h-screen flex items-center justify-center bg-base-200">
+      <div className="flex items-center justify-center bg-base-200 py-8">
         <div className="card w-full max-w-md shadow-xl bg-base-100">
           <form onSubmit={handleSignup} className="card-body">
             <h2 className="card-title justify-center">Sign Up</h2>
@@ -54,7 +54,7 @@ export default function SignupPage() {
               type="email"
               name="email"
               placeholder="Email"
-              className="input input-bordered"
+              className="input input-bordered w-full text-center"
               value={form.email}
               onChange={handleChange}
               required
@@ -63,7 +63,7 @@ export default function SignupPage() {
               type="password"
               name="password"
               placeholder="Password"
-              className="input input-bordered"
+              className="input input-bordered w-full text-center"
               value={form.password}
               onChange={handleChange}
               required
@@ -72,13 +72,13 @@ export default function SignupPage() {
               type="text"
               name="skills"
               placeholder="Skills (comma-separated)"
-              className="input input-bordered"
+              className="input input-bordered w-full text-center"
               value={form.skills}
               onChange={handleChange}
             />
             <select
               name="role"
-              className="select select-bordered"
+              className="select select-bordered w-full text-center"
               value={form.role}
               onChange={handleChange}
             >
