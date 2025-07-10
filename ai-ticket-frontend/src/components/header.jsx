@@ -26,7 +26,7 @@ export default function Header() {
         </div>
 
         {role === "admin" && (
-          <Link to="/admin" className="btn btn-sm btn-outline text-white">
+          <Link to="/admin" className="btn btn-sm btn-outline text-blue-300">
             Admin Panel
           </Link>
         )}
