@@ -4,6 +4,7 @@ import User from "../../models/user.js";
 import { NonRetriableError } from "inngest";
 import { sendMail } from "../../utils/mailer.js";
 import analyzeTicket from "../../utils/ai.js";
+import matchBestModerator from "../../utils/ai_match_mod.js";
 
 export const onTicketCreated = inngest.createFunction(
   { id: "on-ticket-created", retries: 2 },
@@ -26,6 +27,8 @@ export const onTicketCreated = inngest.createFunction(
       });
 
       const aiResponse = await analyzeTicket(ticket);
+      // console.log(ticket)
+      // console.log(aiResponse)
 
       const relatedskills = await step.run("ai-processing", async () => {
         let skills = [];
@@ -43,25 +46,29 @@ export const onTicketCreated = inngest.createFunction(
         return skills;
       });
 
-      const moderator = await step.run("assign-moderator", async () => {
-        let user = await User.findOne({
-          role: "moderator",
-          skills: {
-            $elemMatch: {
-              $regex: relatedskills.join("|"),
-              $options: "i",
-            },
-          },
-        });
-        if (!user) {
-          user = await User.findOne({
-            role: "admin",
-          });
+      const moderator = await step.run("assign-best-moderator", async () => {
+        const moderators = await User.find({ role: "moderator" });
+
+        if (!relatedskills.length || moderators.length === 0) {
+          return await User.findOne({ role: "admin" });
         }
-        await Ticket.findByIdAndUpdate(ticket._id, {
-          assignedTo: user?._id || null,
-        });
-        return user;
+
+        return moderators;
+      });
+
+      let bestModerator = null;
+
+      if (moderator && Array.isArray(moderator)) {
+        const bestEmail = await matchBestModerator(relatedskills, moderator);
+        bestModerator = await User.findOne({ email: bestEmail });
+      }
+
+      if (!bestModerator) {
+        bestModerator = await User.findOne({ role: "admin" });
+      }
+
+      await Ticket.findByIdAndUpdate(ticket._id, {
+        assignedTo: bestModerator?._id || null,
       });
 
       await step.run("send-email-notification", async () => {
