@@ -97,7 +97,7 @@ export default function Tickets() {
         )}
 
         <h2 className="text-xl font-semibold mb-2">
-          {user.role === "admin" || user.role === "moderator"
+          {user.role === "admin"
             ? "All Tickets (Admin View)"
             : "Your Tickets"}
         </h2>
