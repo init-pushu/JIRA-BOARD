@@ -56,7 +56,7 @@ export default function LoginPage() {
               type="email"
               name="email"
               placeholder="Email"
-              className="input input-bordered"
+              className="input input-bordered w-full"
               value={form.email}
               onChange={handleChange}
               required
@@ -66,7 +66,7 @@ export default function LoginPage() {
               type="password"
               name="password"
               placeholder="Password"
-              className="input input-bordered"
+              className="input input-bordered w-full"
               value={form.password}
               onChange={handleChange}
               required

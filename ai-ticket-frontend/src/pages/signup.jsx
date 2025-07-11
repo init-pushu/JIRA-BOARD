@@ -54,7 +54,7 @@ export default function SignupPage() {
               type="email"
               name="email"
               placeholder="Email"
-              className="input input-bordered w-full text-center"
+              className="input input-bordered w-full"
               value={form.email}
               onChange={handleChange}
               required
@@ -63,7 +63,7 @@ export default function SignupPage() {
               type="password"
               name="password"
               placeholder="Password"
-              className="input input-bordered w-full text-center"
+              className="input input-bordered w-full"
               value={form.password}
               onChange={handleChange}
               required
@@ -72,13 +72,13 @@ export default function SignupPage() {
               type="text"
               name="skills"
               placeholder="Skills (comma-separated)"
-              className="input input-bordered w-full text-center"
+              className="input input-bordered w-full"
               value={form.skills}
               onChange={handleChange}
             />
             <select
               name="role"
-              className="select select-bordered w-full text-center"
+              className="select select-bordered w-full"
               value={form.role}
               onChange={handleChange}
             >

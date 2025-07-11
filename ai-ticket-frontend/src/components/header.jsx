@@ -49,9 +49,11 @@ export default function Header() {
             </span>
           </div>
         </div>
-        <button className="btn btn-sm btn-accent ml-2" onClick={handleLogout}>
-          Logout
-        </button>
+        {localStorage.getItem("token") && (
+          <button className="btn btn-sm btn-accent ml-2" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );
