@@ -117,10 +117,31 @@ export default function Tickets() {
               {ticket.status && (
                 <p className="text-sm text-yellow-400">Status: {ticket.status}</p>
               )}
-              {ticket.assignedTo?.email && (
+              {user.role === "moderator" && (
+                <p className="text-sm text-green-400">
+                  Created By: {ticket.createdBy.email}
+              </p>
+              )}
+              {user.role === "user" && (
+                ticket.assignedTo?.email && (
                 <p className="text-sm text-green-400">
                   Assigned To: {ticket.assignedTo.email}
                 </p>
+                )
+              )}
+              {user.role === "admin" && (
+                <>
+                  {ticket.assignedTo?.email && (
+                    <p className="text-sm text-green-400">
+                      Assigned To: {ticket.assignedTo.email}
+                    </p>
+                  )}
+                  {ticket.createdBy?.email && (
+                    <p className="text-sm text-purple-400">
+                      Created By: {ticket.createdBy.email}
+                    </p>
+                  )}
+                </>
               )}
             </Link>
           ))}

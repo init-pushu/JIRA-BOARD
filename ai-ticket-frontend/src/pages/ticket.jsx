@@ -10,6 +10,7 @@ export default function TicketDetailsPage() {
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchTicket = async () => {
@@ -57,33 +58,46 @@ export default function TicketDetailsPage() {
             <>
               <div className="divider">Metadata</div>
               <p><strong>Status:</strong> {ticket.status}</p>
+              
+              {user.role !== "user" && (
+                <>
 
-              {ticket.priority && (
-                <p><strong>Priority:</strong> {ticket.priority}</p>
+                  {ticket.priority && (
+                    <p><strong>Priority:</strong> {ticket.priority}</p>
+                  )}
+
+                  {ticket.relatedSkills?.length > 0 && (
+                    <p><strong>Related Skills:</strong> {ticket.relatedSkills.join(", ")}</p>
+                  )}
+
+                  {ticket.helpfulNotes && (
+                    <div>
+                      <strong>Helpful Notes:</strong>
+                      <div className="prose bg-base-300 p-3 rounded mt-2">
+                        <ReactMarkdown>{ticket.helpfulNotes}</ReactMarkdown>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <p className="text-1xl font-bold text-purple-400">
+                       Created By: {ticket.createdBy.email}
+                  </p>
+                  
+
+                </>
               )}
 
-              {ticket.relatedSkills?.length > 0 && (
-                <p><strong>Related Skills:</strong> {ticket.relatedSkills.join(", ")}</p>
+              {user.role !== "moderator" && (
+                
+                <p className="text-1xl font-bold text-green-400">
+                     Assigned To: {ticket.assignedTo.email}
+                  </p>
               )}
 
-              {ticket.helpfulNotes && (
-                <div>
-                  <strong>Helpful Notes:</strong>
-                  <div className="prose bg-base-300 p-3 rounded mt-2">
-                    <ReactMarkdown>{ticket.helpfulNotes}</ReactMarkdown>
-                  </div>
-                </div>
-              )}
-
-              {ticket.assignedTo && (
-                <p><strong>Assigned To:</strong> {ticket.assignedTo?.email}</p>
-              )}
-
-              {/* {ticket.createdBy && (
-                <p>
-                  <strong>Created By:</strong> {ticket.createdBy}
-                </p>
-              )} */}
+              {/* <p>
+                <strong>Created By:</strong> {ticket.createdBy.email}
+              </p>
+               */}
 
               {ticket.createdAt && (
                 <p className="text-sm text-gray-500">
