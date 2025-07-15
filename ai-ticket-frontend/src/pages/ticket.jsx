@@ -80,7 +80,7 @@ export default function TicketDetailsPage() {
                   )}
                   
                   <p className="text-1xl font-bold text-purple-400">
-                       Created By: {ticket.createdBy.email}
+                       Created By: {ticket.createdBy?.email || "Dummy Response"}
                   </p>
                   
 
@@ -90,7 +90,7 @@ export default function TicketDetailsPage() {
               {user.role !== "moderator" && (
                 
                 <p className="text-1xl font-bold text-green-400">
-                     Assigned To: {ticket.assignedTo.email}
+                     Assigned To: {ticket.assignedTo?.email || "Not Assigned yet"}
                   </p>
               )}
 
