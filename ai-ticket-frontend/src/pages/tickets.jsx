@@ -7,25 +7,33 @@ export default function Tickets() {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const token = localStorage.getItem("token");
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const fetchTickets = async () => {
+  const fetchTickets = async (pageNum = 1) => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_SERVER_URL}/tickets/`, {
-        headers: { Authorization: `Bearer ${token}` },
-        method: "GET",
-      });
+      const res = await fetch(
+        `${import.meta.env.VITE_SERVER_URL}/tickets?page=${pageNum}&limit=5`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          method: "GET",
+        }
+      );
       const data = await res.json();
       setTickets(data.tickets || []);
+      setPage(data.currentPage || 1);
+      setTotalPages(data.totalPages || 1);
     } catch (err) {
       console.error("Failed to fetch tickets:", err);
     }
   };
 
   useEffect(() => {
-    fetchTickets();
-  }, []);
+    fetchTickets(page);
+  }, [page]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -48,7 +56,7 @@ export default function Tickets() {
 
       if (res.ok) {
         setForm({ title: "", description: "" });
-        fetchTickets(); // Refresh list
+        fetchTickets(page); // Reload current page
       } else {
         alert(data.message || "Ticket creation failed");
       }
@@ -64,7 +72,6 @@ export default function Tickets() {
     <div className="min-h-screen bg-base-200">
       <Header />
       <div className="p-4 max-w-3xl mx-auto">
-
         {user.role === "user" && (
           <>
             <h2 className="text-2xl font-bold mb-4">Create Ticket</h2>
@@ -115,20 +122,21 @@ export default function Tickets() {
                 Created At: {new Date(ticket.createdAt).toLocaleString()}
               </p>
               {ticket.status && (
-                <p className="text-sm text-yellow-400">Status: {ticket.status}</p>
+                <p className="text-sm text-yellow-400">
+                  Status: {ticket.status}
+                </p>
               )}
               {user.role === "moderator" && (
                 <p className="text-sm text-green-400">
                   Created By: {ticket.createdBy.email}
-              </p>
-              )}
-              {user.role === "user" && (
-                ticket.assignedTo?.email && (
-                <p className="text-sm text-green-400">
-                  Assigned To: {ticket.assignedTo.email}
                 </p>
-                )
               )}
+              {user.role === "user" &&
+                ticket.assignedTo?.email && (
+                  <p className="text-sm text-green-400">
+                    Assigned To: {ticket.assignedTo.email}
+                  </p>
+                )}
               {user.role === "admin" && (
                 <>
                   {ticket.assignedTo?.email && (
@@ -148,6 +156,28 @@ export default function Tickets() {
           {tickets.length === 0 && (
             <p className="text-center text-gray-500">No tickets found.</p>
           )}
+        </div>
+
+        <div className="flex justify-center mt-8 gap-6">
+          <button
+            className="px-5 py-2 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-primary/80 transition disabled:opacity-50"
+            disabled={page <= 1}
+            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+          >
+            Previous
+          </button>
+
+          <span className="px-4 py-2 text-lg font-semibold text-gray-700 bg-white rounded-lg shadow">
+            Page {page} of {totalPages}
+          </span>
+
+          <button
+            className="px-5 py-2 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-primary/80 transition disabled:opacity-50"
+            disabled={page >= totalPages}
+            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+          >
+            Next 
+          </button>
         </div>
       </div>
     </div>

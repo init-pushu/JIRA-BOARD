@@ -37,33 +37,53 @@ export const createTicket = async (req, res) => {
 export const getTickets = async (req, res) => {
   try {
     const user = req.user;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     let tickets = [];
+    let total = 0;
 
     if (user.role === "admin") {
+      total = await Ticket.countDocuments({});
       tickets = await Ticket.find({})
         .populate("assignedTo", ["email", "_id"])
         .populate("createdBy", ["email", "_id"])
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
     } else if (user.role === "moderator") {
+      total = await Ticket.countDocuments({ assignedTo: user._id });
       tickets = await Ticket.find({ assignedTo: user._id })
         .populate("assignedTo", ["email", "_id"])
         .populate("createdBy", ["email", "_id"])
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
     } else {
+      total = await Ticket.countDocuments({ createdBy: user._id });
       tickets = await Ticket.find({ createdBy: user._id })
         .populate("assignedTo", ["email", "_id"])
         .select("title description status createdAt assignedTo")
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
     }
 
-    return res.status(200).json({ tickets });
+    return res.status(200).json({
+      tickets,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalTickets: total,
+    });
   } catch (error) {
     console.error("Error fetching tickets", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 
 export const getTicket = async (req, res) => {
