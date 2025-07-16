@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { UserIcon } from "@heroicons/react/24/solid";
 
 export default function Header() {
   const [userEmail, setUserEmail] = useState("Unknown User");
@@ -33,7 +34,6 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-4">
-        {/* User Info */}
         <div className="flex flex-col items-end text-sm">
           <div className="font-semibold">{userEmail}</div>
           {role && (
@@ -42,13 +42,10 @@ export default function Header() {
             </div>
           )}
         </div>
-         <div className="avatar">
-          <div className="w-12 h-12 rounded-full bg-neutral-focus text-neutral-content flex items-center justify-center">
-            <span className="semi-bold">
-              {userEmail[0]?.toUpperCase() || "U"}
-            </span>
-          </div>
+        <div className="w-12 h-12 rounded-full bg-sky-500 text-white flex items-center justify-center">
+          <UserIcon className="w-6 h-6" />
         </div>
+
         {localStorage.getItem("token") && (
           <button className="btn btn-sm btn-accent ml-2" onClick={handleLogout}>
             Logout
