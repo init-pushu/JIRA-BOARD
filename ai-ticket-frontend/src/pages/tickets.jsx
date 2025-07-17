@@ -158,25 +158,25 @@ export default function Tickets() {
           )}
         </div>
 
-        <div className="flex justify-center mt-8 gap-6">
+        <div className="flex justify-center mt-8 gap-4">
           <button
-            className="px-5 py-2 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-primary/80 transition disabled:opacity-50"
+            className="px-4 py-1.5 bg-blue-200 text-blue-800 rounded-md font-medium text-base hover:bg-blue-300 transition disabled:opacity-50 cursor-pointer"
             disabled={page <= 1}
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           >
             Previous
           </button>
 
-          <span className="px-4 py-2 text-lg font-semibold text-gray-700 bg-white rounded-lg shadow">
+          <span className="px-3 py-1.5 text-base font-medium text-gray-800 bg-white rounded-md shadow">
             Page {page} of {totalPages}
           </span>
 
           <button
-            className="px-5 py-2 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-primary/80 transition disabled:opacity-50"
+            className="px-4 py-1.5 bg-blue-200 text-blue-800 rounded-md font-medium text-base hover:bg-blue-300 transition disabled:opacity-50 cursor-pointer"
             disabled={page >= totalPages}
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           >
-            Next 
+            Next
           </button>
         </div>
       </div>
