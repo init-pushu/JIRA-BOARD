@@ -9,7 +9,7 @@ export const createTicket = async (req, res) => {
         .status(400)
         .json({ message: "Title and description are required" });
     }
-    console.log("-----------created")
+    // console.log("-----------created")
     const newTicket = await Ticket.create({
       title,
       description,

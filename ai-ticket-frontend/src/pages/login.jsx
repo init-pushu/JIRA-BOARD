@@ -30,7 +30,7 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        alert("OK")
+        // alert("OK")
         navigate("/dashboard");
       } else {
         alert(data.message || "Login failed");
