@@ -15,7 +15,7 @@ export const createTicket = async (req, res) => {
       description,
       createdBy: req.user._id.toString(),
     });
-    await inngest.send({
+    inngest.send({
       name: "ticket/created",
       data: {
         ticketId: newTicket._id.toString(),
@@ -23,13 +23,16 @@ export const createTicket = async (req, res) => {
         description,
         createdBy: req.user._id.toString(),
       },
-    });
+    }).catch(err => console.error("Inngest send failed:", err));
+
+    // Return success immediately
     return res.status(201).json({
       message: "Ticket created and processing started",
       ticket: newTicket,
     });
-  } catch (error) {
-    console.error("Error creating ticket", error.message);
+  }
+  catch (err) {
+    console.error("Error creating ticket", err.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
